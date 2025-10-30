@@ -1,10 +1,14 @@
 import sys, os, pathlib
+import socket
+import time
 import opencue
 from outline import Outline
 from outline.modules.shell import Shell
 
 stage = pathlib.Path(sys.argv[1]).resolve()
-job_name = f"AssetLab_{stage.stem}"
+timestamp = time.strftime("%Y%m%d_%H%M%S")
+hostname = socket.gethostname().split('.')[0]  # Get short hostname
+job_name = f"AssetLab_{hostname}_{timestamp}_{stage.stem}"
 
 ol = Outline(job_name)
 layer = Shell(
