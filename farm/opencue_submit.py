@@ -2,6 +2,7 @@ import sys, os, pathlib
 import socket
 import time
 import opencue
+import asyncio
 from outline import Outline
 from outline.modules.shell import Shell
 
@@ -17,7 +18,26 @@ layer = Shell(
 )
 ol.add_layer(layer)
 
-# Launch the job
 import outline.cuerun
-outline.cuerun.launch(ol)
-print(f"SUBMITTED {job_name}")
+
+async def main():
+    loop = asyncio.get_running_loop()
+    result = await loop.run_in_executor(None, outline.cuerun.launch, ol)
+    jobs = result if isinstance(result, list) else [result]
+    job_ids = [job.id() for job in jobs]
+    print(f"SUBMITTED {job_name} (IDs: {', '.join(job_ids)})")
+    await asyncio.gather(*(monitor_job(jid) for jid in job_ids))
+async def monitor_job(job_id):
+    loop = asyncio.get_running_loop()
+    while True:
+        job = await loop.run_in_executor(None, opencue.api.findJob, job_id)
+        state = job.state().name
+        print(f"Job {job_id} state = {state}")
+        if state in ('COMPLETE', 'FAILED', 'KILLED'):
+            print(f"Final state: {state}")
+            return
+        await asyncio.sleep(2)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+

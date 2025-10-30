@@ -148,17 +148,17 @@ class Main(QtWidgets.QMainWindow):
     def on_convert(self):
         root = self.root.text()
         hython = os.environ.get("HYTHON", "hython")  
-        self.run([hython, "worker/convert_to_usd.py", root, "out/usd"])  
+        self.run([hython, "-m", "worker.convert_to_usd", root, "out/usd"])  
 
     def on_stage(self):
         out = self.root.text()
         hython = os.environ.get("HYTHON", "hython")
-        self.run([hython, "worker/assemble_stage.py", "out/usd", "out/stage.usd"])  
+        self.run([hython, "-m", "worker.assemble_stage", "out/usd", "out/stage.usd"])  
 
     def on_submit(self):
         
-        if self.run([sys.executable, "farm/opencue_submit.py", "out/stage.usd"]) != 0:
-            self.run([sys.executable, "farm/mock_submit.py", "out/stage.usd"])  
+        if self.run([sys.executable, "-m", "farm.opencue_submit", "out/stage.usd"]) != 0:
+            self.run([sys.executable, "-m", "farm.mock_submit", "out/stage.usd"])  
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

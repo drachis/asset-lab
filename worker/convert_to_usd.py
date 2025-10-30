@@ -24,6 +24,7 @@ def ensure_output_dir(path: Union[str, Path]):
     return out_path
 
 def convert_to_usd(src_path: Path, out_dir: Path):
+    print(f"Processing file: {src_path}", flush=True)
     """Convert a single 3D model file to USD format.
     
     Args:
@@ -53,8 +54,9 @@ def convert_to_usd(src_path: Path, out_dir: Path):
         lopnet = geo.createNode("lopnet", node_name="lop")
         rop = lopnet.createNode("rop_usd")
         rop.parm("lopoutput").set(str(usdpath))
+        print(f"Rendering USD to {usdpath}", flush=True)
         rop.render()
-        print(f"WROTE {usdpath}")
+        print(f"WROTE {usdpath}", flush=True)
     
     finally:
         geo.destroy()
@@ -62,14 +64,15 @@ def convert_to_usd(src_path: Path, out_dir: Path):
 def main():
     """Main entry point for the conversion script."""
     if len(sys.argv) != 3:
-        print("Usage: hython convert_to_usd.py <source_dir> <output_dir>")
+        print("Usage: hython convert_to_usd.py <source_dir> <output_dir>", flush=True)
         sys.exit(1)
 
     src_dir = Path(sys.argv[1])
     out_dir = ensure_output_dir(sys.argv[2])
+    print(f"Output directory: {out_dir}", flush=True)
 
     if not src_dir.is_dir():
-        print(f"Error: Source directory '{src_dir}' does not exist")
+        print(f"Error: Source directory '{src_dir}' does not exist", flush=True)
         sys.exit(1)
 
     for src_file in sorted(src_dir.rglob("*")):
