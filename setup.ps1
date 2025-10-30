@@ -8,7 +8,6 @@ $env:HYTHON
 pip install --upgrade pip
 Get-Location | Set-Clipboard
 
-git clone https://github.com/AcademySoftwareFoundation/OpenCue.git
 cd OpenCue
 git checkout v1.13.8
 docker-compose up -d
