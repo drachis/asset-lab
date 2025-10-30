@@ -15,16 +15,15 @@ from pathlib import Path
 from typing import Set, Union
 import hou
 
-# Supported input formats
 SUPPORTED_FORMATS: Set[str] = {".fbx", ".obj"}
 
-def ensure_output_dir(path: Union[str, Path]) -> Path:
+def ensure_output_dir(path: Union[str, Path]):
     """Create output directory if it doesn't exist."""
     out_path = Path(path)
     out_path.mkdir(parents=True, exist_ok=True)
     return out_path
 
-def convert_to_usd(src_path: Path, out_dir: Path) -> None:
+def convert_to_usd(src_path: Path, out_dir: Path):
     """Convert a single 3D model file to USD format.
     
     Args:
@@ -39,11 +38,10 @@ def convert_to_usd(src_path: Path, out_dir: Path) -> None:
     geo = obj.createNode("geo", node_name=f"imp_{src_path.stem}")
     
     try:
-        # Import based on file type
         if ext == ".obj":
             file1 = geo.createNode("file")
             file1.parm("file").set(str(src_path))
-        else:  # .fbx
+        else:
             hou.hipFile.importFBX(str(src_path), merge_into_scene=True)
             fbxroot = obj.glob(f"{src_path.stem}*")
             if fbxroot:
@@ -51,7 +49,6 @@ def convert_to_usd(src_path: Path, out_dir: Path) -> None:
                 merge.parm("objpath1").set(fbxroot[0].path())
                 merge.parm("xformtype").set(1)
 
-        # Export to USD
         usdpath = out_dir / f"{src_path.stem}.usd"
         lopnet = geo.createNode("lopnet", node_name="lop")
         rop = lopnet.createNode("rop_usd")
@@ -60,10 +57,9 @@ def convert_to_usd(src_path: Path, out_dir: Path) -> None:
         print(f"WROTE {usdpath}")
     
     finally:
-        # Clean up even if there's an error
         geo.destroy()
 
-def main() -> None:
+def main():
     """Main entry point for the conversion script."""
     if len(sys.argv) != 3:
         print("Usage: hython convert_to_usd.py <source_dir> <output_dir>")
