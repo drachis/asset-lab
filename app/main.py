@@ -32,7 +32,7 @@ class Main(QtWidgets.QMainWindow):
         w = QtWidgets.QWidget(); w.setLayout(lay); self.setCentralWidget(w)
 
     def pick_dir(self):
-        d = QtWidgets.QFileDialog.getExistingDirectory(self, "Pick source folder")
+        d = QtWidgets.QFileDialog.getExistingDirectory(self, "Select asset folder")
         if d:
             self.root.setText(d)
             self.refresh()
@@ -47,7 +47,7 @@ class Main(QtWidgets.QMainWindow):
             self.table.setItem(r, 1, QtWidgets.QTableWidgetItem(p.suffix.lower()))
             self.table.setItem(r, 2, QtWidgets.QTableWidgetItem(f"{p.stat().st_size//1024}"))
 
-    # Helper to run a subprocess and stream stdout
+    
     def run(self, args, env=None):
         self.log.appendPlainText("$ " + " ".join(args))
         p = QtCore.QProcess(self)
@@ -68,18 +68,18 @@ class Main(QtWidgets.QMainWindow):
 
     def on_convert(self):
         root = self.root.text()
-        hython = os.environ.get("HYTHON", "hython")  # set HYTHON env to Houdini hython.exe
-        self.run([hython, "worker/convert_to_usd.py", root, "out/usd"])  # writes per-asset USDs
+        hython = os.environ.get("HYTHON", "hython")  
+        self.run([hython, "worker/convert_to_usd.py", root, "out/usd"])  
 
     def on_stage(self):
         out = self.root.text()
         hython = os.environ.get("HYTHON", "hython")
-        self.run([hython, "worker/assemble_stage.py", "out/usd", "out/stage.usd"])  # compose a root stage
+        self.run([hython, "worker/assemble_stage.py", "out/usd", "out/stage.usd"])  
 
     def on_submit(self):
-        # Try OpenCue; fallback to mock
+        
         if self.run([sys.executable, "farm/opencue_submit.py", "out/stage.usd"]) != 0:
-            self.run([sys.executable, "farm/mock_submit.py", "out/stage.usd"])  # simulate farm
+            self.run([sys.executable, "farm/mock_submit.py", "out/stage.usd"])  
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

@@ -4,5 +4,11 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+		"python.terminal.activateEnvironment": true,
+		"terminal.integrated.defaultProfile.windows": "PowerShell",
+		"python.venvPath": "${workspaceFolder}/.venv",
+		"python.venvFolders": [".venv", "venv"]
+	}
 }
