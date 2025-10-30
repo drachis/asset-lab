@@ -1,1 +1,21 @@
-"envFile": "${workspaceFolder}/.env"
+{
+  "version": "99.99.99",
+  "configurations": [
+    {
+      "name": "Asset Lab UI",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/app/main.py",
+      "envFile": "${workspaceFolder}/.env",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Hython: print versions",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "C:/Program Files/Side Effects Software/Houdini 19.0.720/bin/hython3.7.exe",
+      "args": ["-c", "import sys,hou;print(sys.version);print(hou.applicationVersionString())"],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
