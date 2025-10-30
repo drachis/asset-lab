@@ -1,0 +1,21 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
+    },
+    // File pattern-specific Python interpreter settings
+    "python.analysis.extraPaths": [
+        "./",
+        "./validate"
+    ],
+    "python.analysis.include": [
+        "app/**/*.py",
+        "worker/**/*.py",
+        "validate/**/*.py",
+        "farm/**/*.py"
+    ],
+    // Override Python interpreter for specific patterns
+    "python.interpreterPath": {
+        "worker/convert_to_usd.py": "C:/Program Files/Side Effects Software/Houdini 19.0.720/bin/hython3.7.exe"
+    }
+}
