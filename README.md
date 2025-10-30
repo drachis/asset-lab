@@ -1,2 +1,4 @@
 # asset-lab
-Learning project to ramp up on Houdini python and asset management
+Learning project to refresh
+Touch Houdini, Python, OpenCue, 
+venv, Docker
