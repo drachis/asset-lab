@@ -143,7 +143,7 @@ class Main(QtWidgets.QMainWindow):
 
     def on_validate(self):
         root = self.root.text()
-        self.run([sys.executable, "-m", "validate.gltf_meta", root])
+        self.run([sys.executable, "-m", "validate.validator", root])
 
     def on_convert(self):
         root = self.root.text()

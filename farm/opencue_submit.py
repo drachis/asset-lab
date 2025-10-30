@@ -2,11 +2,28 @@ import sys, os, pathlib
 import socket
 import time
 import opencue
+from opencue.exception import EntityNotFoundException
 import asyncio
 from outline import Outline
 from outline.modules.shell import Shell
 
-stage = pathlib.Path(sys.argv[1]).resolve()
+if len(sys.argv) != 2:
+    print("Usage: python -m farm.opencue_submit <path-to-stage>")
+    sys.exit(1)
+
+stage_path = pathlib.Path(sys.argv[1])
+
+if not stage_path.exists():
+    print(f"Error: path '{stage_path}' does not exist.")
+    sys.exit(1)
+elif stage_path.is_file() and stage_path.stat().st_size == 0:
+    print(f"Error: file '{stage_path}' is empty.")
+    sys.exit(1)
+elif stage_path.is_dir() and not any(stage_path.iterdir()):
+    print(f"Error: directory '{stage_path}' is empty.")
+    sys.exit(1)
+
+stage = stage_path.resolve()
 timestamp = time.strftime("%Y%m%d_%H%M%S")
 hostname = socket.gethostname().split('.')[0]  # Get short hostname
 job_name = f"AssetLab_{hostname}_{timestamp}_{stage.stem}"
@@ -30,7 +47,11 @@ async def main():
 async def monitor_job(job_id):
     loop = asyncio.get_running_loop()
     while True:
-        job = await loop.run_in_executor(None, opencue.api.findJob, job_id)
+        try:
+            job = await loop.run_in_executor(None, opencue.api.findJob, job_id)
+        except EntityNotFoundException:
+            print(f"Error: Job {job_id} not found. Stopping monitor.")
+            return
         state = job.state().name
         print(f"Job {job_id} state = {state}")
         if state in ('COMPLETE', 'FAILED', 'KILLED'):
