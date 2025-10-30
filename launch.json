@@ -1,5 +1,5 @@
 {
-  "version": "99.99.99",
+  "version": "2025.10.30",
   "configurations": [
     {
       "name": "Asset Lab UI",
@@ -10,11 +10,10 @@
       "cwd": "${workspaceFolder}"
     },
     {
-      "name": "Hython: print versions",
+      "name": "Hython",
       "type": "cppdbg",
       "request": "launch",
       "program": "C:/Program Files/Side Effects Software/Houdini 19.0.720/bin/hython3.7.exe",
-      "args": ["-c", "import sys,hou;print(sys.version);print(hou.applicationVersionString())"],
       "cwd": "${workspaceFolder}"
     }
   ]
